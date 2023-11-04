@@ -1,5 +1,6 @@
 # clipbrd
 Windows 3.x clipboard viewer clone
 
-![image](https://github.com/osfree-project/clipbrd/assets/14326809/2346396b-8b00-40ae-8558-738a64b8f6b6)
+![image](https://github.com/osfree-project/clipbrd/assets/14326809/8cbcfec4-8a2f-4dbe-b5f5-7b37f7bef7b6)
+
 
