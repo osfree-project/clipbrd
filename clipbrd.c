@@ -651,7 +651,6 @@ static LRESULT WINAPI MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
             //}
             //break;
         //}
-
         default:
         {
             return DefWindowProc(hWnd, uMsg, wParam, lParam);
@@ -661,54 +660,45 @@ static LRESULT WINAPI MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
     return 0;
 }
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+BOOL CLIPBRD_RegisterMainWinClass(void)
+{
+	WNDCLASS class;
+	
+	class.style         = CS_HREDRAW | CS_VREDRAW;
+	class.lpfnWndProc   = MainWndProc;
+	class.hInstance     = Globals.hInstance;
+	class.hIcon         = 0;//LoadIcon(hInstance, MAKEINTRESOURCE(CLIPBRD_ICON));
+	class.hCursor       = LoadCursor(0, (LPCSTR)IDC_ARROW);
+	class.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+	class.lpszMenuName  = MAKEINTRESOURCE(MAIN_MENU);
+	class.lpszClassName = szClassName;
+
+	return RegisterClass(&class);
+}
+
+int PASCAL WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
     MSG msg;
     HACCEL hAccel;
     HWND hPrevWindow;
-    WNDCLASS wndclass;
     char szBuffer[MAX_STRING_LEN];
 
     hPrevWindow = FindWindow(szClassName, NULL);
     if (hPrevWindow)
     {
-        BringWindowToFront(hPrevWindow);
-        return 0;
+//        BringWindowToFront(hPrevWindow);
+//        return 0;
     }
-
-    //switch (GetUserDefaultUILanguage())
-    //{
-        //case MAKELANGID(LANG_HEBREW, SUBLANG_DEFAULT):
-            //SetProcessDefaultLayout(LAYOUT_RTL);
-            //break;
-
-//        default:
-            //break;
-    //}
 
     memset(&Globals, 0, sizeof(Globals));
     Globals.hInstance = hInstance;
 
-    memset(&wndclass, 0, sizeof(wndclass));
-//    wndclass.cbSize = sizeof(wndclass);
-    wndclass.lpfnWndProc = MainWndProc;
-    wndclass.hInstance = hInstance;
-    wndclass.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(CLIPBRD_ICON));
-    wndclass.hCursor = LoadCursor(0, IDC_ARROW);
-    wndclass.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
-    wndclass.lpszMenuName = MAKEINTRESOURCE(MAIN_MENU);
-    wndclass.lpszClassName = szClassName;
-
-    if (!RegisterClass(&wndclass))
-    {
-        //ShowLastWin32Error(NULL);
-        return 0;
-    }
+    if (!CLIPBRD_RegisterMainWinClass()) return 0;
 
     memset(&Scrollstate, 0, sizeof(Scrollstate));
 
-    LoadString(hInstance, STRING_CLIPBOARD, szBuffer, ARRAYSIZE(szBuffer));
-    Globals.hMainWnd = CreateWindowEx(/*WS_EX_CLIENTEDGE |*/ WS_EX_ACCEPTFILES,
+    LoadString(Globals.hInstance, STRING_CLIPBOARD, szBuffer, sizeof(szBuffer));
+    Globals.hMainWnd = CreateWindowEx(/*WS_EX_CLIENTEDGE | */ WS_EX_ACCEPTFILES ,
                                        szClassName,
                                        szBuffer,
                                        WS_OVERLAPPEDWINDOW | WS_HSCROLL | WS_VSCROLL,
@@ -720,6 +710,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
                                        0,
                                        Globals.hInstance,
                                        NULL);
+
     if (!Globals.hMainWnd)
     {
         //ShowLastWin32Error(NULL);

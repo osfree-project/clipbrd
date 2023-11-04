@@ -12,6 +12,7 @@ srcfiles = $(p)clipbrd$(e) $(p)cliputils$(e) $(p)winutils$(e) $(p)fileutils$(e) 
 # defines additional options for C compiler
 ADD_COPT = -sg 
 ADD_LINKOPT = LIB commdlg.lib
+HEAPSIZE = 4k
 
 CLEAN_ADD = *.mbr
 
@@ -22,6 +23,6 @@ TARGETS = $(PATH)$(PROJ1).exe
 
 .ico: $(MYDIR)res
 
-$(PATH)$(PROJ1).exe: $(PATH)$(PROJ).exe $(MYDIR)clipbrd.rc
+$(PATH)$(PROJ1).exe: $(PATH)$(PROJ).exe $(MYDIR)$(PROJ1).rc
  @$(SAY) RESCMP   $^. $(LOG)
  @wrc -q -bt=windows $]@ $[@ -fe=$@ -fo=$^@ -i=$(MYDIR) -i=$(%WATCOM)$(SEP)h$(SEP)win
