@@ -14,8 +14,6 @@ ADD_COPT = -sg
 ADD_LINKOPT = LIB commdlg.lib
 HEAPSIZE = 4k
 
-CLEAN_ADD = *.mbr
-
 !include $(%ROOT)tools/mk/appsw16.mk
 
 TARGETS = $(PATH)$(PROJ1).exe
