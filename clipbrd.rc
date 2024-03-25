@@ -29,7 +29,7 @@ CLPFILE_ICON ICON "res/clpfile.ico"
     //#include "lang/de-DE.rc"
 //#endif
 //#ifdef LANGUAGE_EN_US
-    #include "lang\en-US.rc"
+    #include "lang/en-US.rc"
 //#endif
 //#ifdef LANGUAGE_ES_ES
     //#include "lang/es-ES.rc"
