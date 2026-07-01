@@ -35,7 +35,8 @@ static void SaveClipboardToFile(void)
     sfn.Flags = OFN_EXPLORER | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
     sfn.lpstrDefExt = "clp";
 
-    if (!GetSaveFileName(&sfn))
+	//@todo Disable for Win 3.0
+//    if (!GetSaveFileName(&sfn))
         return;
 
     if (!OpenClipboard(Globals.hMainWnd))
@@ -91,7 +92,8 @@ static void LoadClipboardFromFile(void)
     ofn.nMaxFile = ARRAYSIZE(szFileName);
     ofn.Flags = OFN_PATHMUSTEXIST | OFN_HIDEREADONLY | OFN_FILEMUSTEXIST;
 
-    if (!GetOpenFileName(&ofn))
+	//@todo Disable for Win 3.0
+//    if (!GetOpenFileName(&ofn))
         return;
 
     LoadClipboardDataFromFile(szFileName);
@@ -101,8 +103,9 @@ static void LoadClipboardFromDrop(HDROP hDrop)
 {
     char szFileName[MAX_PATH];
 
-    DragQueryFile(hDrop, 0, szFileName, ARRAYSIZE(szFileName));
-    DragFinish(hDrop);
+	//@todo Disable for Win 3.0
+//    DragQueryFile(hDrop, 0, szFileName, ARRAYSIZE(szFileName));
+//    DragFinish(hDrop);
 
     LoadClipboardDataFromFile(szFileName);
 }
@@ -199,6 +202,8 @@ static void UpdateDisplayMenu(void)
     CloseClipboard();
 }
 
+typedef BOOL (WINAPI *SHELLABOUT)(HWND hWnd, LPCSTR lpszCaption, LPCSTR lpszAboutText, HICON hIcon);
+
 static int OnCommand(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch (LOWORD(wParam))
@@ -249,14 +254,36 @@ static int OnCommand(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
         case CMD_ABOUT:
         {
-            HICON hIcon;
-            char szTitle[MAX_STRING_LEN];
+		char szApp[MAX_STRING_LEN];
+		char szAppRelease[MAX_STRING_LEN];
+	        HICON hIcon;
+		HINSTANCE hShell;
+		SHELLABOUT pShellAbout;
+		WORD oldErrorMode;
+	        hIcon = LoadIcon(Globals.hInstance, MAKEINTRESOURCE(CLIPBRD_ICON));
 
-            hIcon = LoadIcon(Globals.hInstance, MAKEINTRESOURCE(CLIPBRD_ICON));
-            LoadString(Globals.hInstance, STRING_CLIPBOARD, szTitle, ARRAYSIZE(szTitle));
-            ShellAbout(Globals.hMainWnd, szTitle, NULL, hIcon);
-            DeleteObject(hIcon);
-            break;
+		LoadString(Globals.hInstance, STRING_CLIPBOARD, szApp, sizeof(szApp));
+		lstrcpy(szAppRelease, szApp);
+
+		/* Try shell.dll first (@todo Does'n work under Real Mode Windows 3.0) */
+		oldErrorMode = SetErrorMode(SEM_NOOPENFILEERRORBOX);
+		hShell = LoadLibrary("SHELL");
+		SetErrorMode(oldErrorMode);
+		if (hShell>=HINSTANCE_ERROR)
+		{
+			pShellAbout = (SHELLABOUT)GetProcAddress(hShell, "ShellAbout");
+			if (pShellAbout)
+			{
+				BOOL bRet = pShellAbout(Globals.hMainWnd, szApp, szAppRelease, hIcon);
+				FreeLibrary(hShell);
+				break ;
+			}
+		FreeLibrary(hShell);
+		}
+
+
+		DeleteObject(hIcon);
+		break;
         }
 
         default:
@@ -411,7 +438,8 @@ static LRESULT WINAPI MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
             UpdateDisplayMenu();
             SetDisplayFormat(0);
 
-            DragAcceptFiles(hWnd, TRUE);
+	//@todo Disable for Win 3.0
+//            DragAcceptFiles(hWnd, TRUE);
             break;
         }
 
