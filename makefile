@@ -1,11 +1,11 @@
 #
-# A Makefile for WinOS/2 Clipboard Viewer
-# (c) osFree project,
+# A Makefile for osFree Janus Clipboard Viewer
+# (c) osFree project
 #
 
-DESCRIPTION = Windows Clipboard Viewer
+DESCRIPTION = osFree Janus Clipboard Viewer
 SOURCES = clipbrd cliputils winutils fileutils scrollutils
-LIBS = commdlg
+TARGET_VERSION = 310
 
 ADD_COPT = -sg 
 ADD_RCOPT = -i=$(%WATCOM)$(SEP)h$(SEP)win
