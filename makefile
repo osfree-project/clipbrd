@@ -3,24 +3,12 @@
 # (c) osFree project,
 #
 
-PROJ  = clipbrd1
-PROJ1 = clipbrd
-TRGT = $(PROJ1).exe
-DESC = Windows Clipboard Viewer
-srcfiles = $(p)clipbrd$(e) $(p)cliputils$(e) $(p)winutils$(e) $(p)fileutils$(e) $(p)scrollutils$(e)
+DESCRIPTION = Windows Clipboard Viewer
+SOURCES = clipbrd cliputils winutils fileutils scrollutils
+LIBS = commdlg
 
-# defines additional options for C compiler
 ADD_COPT = -sg 
-ADD_LINKOPT = LIB commdlg.lib
-HEAPSIZE = 4k
+ADD_RCOPT = -i=$(%WATCOM)$(SEP)h$(SEP)win
 
-!include $(%ROOT)tools/mk/appsw16.mk
+!include $(%ROOT)tools/mk/build.mk
 
-TARGETS = $(PATH)$(PROJ1).exe
-
-
-.ico: $(MYDIR)res
-
-$(PATH)$(PROJ1).exe: $(PATH)$(PROJ).exe $(MYDIR)$(PROJ1).rc
- @$(SAY) RESCMP   $^. $(LOG)
- @$(RC) -30 -q -bt=windows $]@ $[@ -fe=$@ -fo=$^@ -i=$(MYDIR) -i=$(%WATCOM)$(SEP)h$(SEP)win
