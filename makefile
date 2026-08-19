@@ -3,8 +3,7 @@
 # (c) osFree project
 #
 
-DESCRIPTION = osFree Janus Clipboard Viewer
-SOURCES = clipbrd cliputils winutils fileutils scrollutils
+DESCRIPTION = Janus Clipboard Viewer
 TARGET_VERSION = 310
 
 !include $(%ROOT)tools/mk/build.mk
