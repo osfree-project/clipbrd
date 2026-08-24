@@ -4,6 +4,9 @@
  * PURPOSE:     Clipboard helper functions.
  * COPYRIGHT:   Copyright 2015-2018 Ricardo Hanke
  *              Copyright 2015-2018 Hermes Belusca-Maito
+ *
+ * SPDX-License-Identifier: GPL-2.0-or-later
+ *
  */
 
 #include "precomp.h"
